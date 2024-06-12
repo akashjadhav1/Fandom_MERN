@@ -48,8 +48,7 @@ const removeFavorites = async (req, res) => {
 
 
 
-    console.log('userId:', userId); // Debugging
-    console.log('movieId:', movieId); // Debugging
+  
 
     try {
         const user = await User.findById(userId);
@@ -60,16 +59,16 @@ const removeFavorites = async (req, res) => {
 
         const movieIdStr = String(movieId); // Ensure movieId is a string
 
-        console.log('user.favorites before:', user.favorites); // Debugging
+       
 
         user.favorites = user.favorites.filter(fav => fav !== movieIdStr);
 
-        console.log('user.favorites after:', user.favorites); // Debugging
+ 
 
         await user.save();
         res.status(200).send({ success: true, message: 'Movie removed from favorites' });
     } catch (error) {
-        console.error('Error while removing movie from favorites:', error); // Debugging
+        
         res.status(500).send({ success: false, message: 'Error while removing movie from favorites', error: error.message });
     }
 };
