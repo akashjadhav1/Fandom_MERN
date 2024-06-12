@@ -9,7 +9,7 @@ const Register = async (req, res) => {
       name: name,
       email: email,
       password: password,
-      favourites: [],
+      favorites: [],
       token: "", // Initialize token as empty string
     });
 

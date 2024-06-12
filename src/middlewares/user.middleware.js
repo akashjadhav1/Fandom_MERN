@@ -1,29 +1,23 @@
-const { verifyToken } = require('../utilities/jwt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 
 const authentication = async (req, res, next) => {
-    try {
-        const token = req.cookies.authToken;
-        if (!token) {
-            return res.status(401).send({ message: 'Unauthorized: No token provided' });
-        }
-
-        const decoded = verifyToken(token);
-        if (!decoded) {
-            return res.status(401).send({ message: 'Unauthorized: Invalid token' });
-        }
-
-        const user = await User.findById(decoded.id);
-        if (!user) {
-            return res.status(404).send({ message: 'User not found' });
-        }
-
-        req.user = user;
-        next();
-    } catch (error) {
-        console.error('Error in authentication middleware:', error);
-        return res.status(500).send({ message: 'Error in authorizing the user', error: error.message });
+  try {
+    const token = req.headers.authorization.split(" ")[1] || null ; // Extract token from Authorization header
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
+    
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    req.user = await User.findById(decoded.id).select('-password');
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized: User not found" });
+    }
+    
+    next();
+  } catch (error) {
+    res.status(401).json({ message: "Unauthorized: Invalid token" });
+  }
 };
 
 module.exports = { authentication };
