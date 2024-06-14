@@ -1,5 +1,6 @@
 const AllData = require("../models/allData.model");
 
+// Function to add all media data
 const addAllMediaData = async (req, res) => {
   try {
     const {
@@ -55,7 +56,7 @@ const addAllMediaData = async (req, res) => {
   }
 };
 
-
+// Function to get all media data
 const getAllMediaData = async (req, res) => {
   try {
     const allEntries = await AllData.find();
@@ -68,7 +69,43 @@ const getAllMediaData = async (req, res) => {
   }
 };
 
+// Function to delete media data by ID
+const deleteMediaById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deletedEntry = await AllData.findByIdAndDelete(id);
+    if (!deletedEntry) {
+      return res.status(404).json({ message: "Media data not found" });
+    }
+    return res.status(200).json({ message: "Media data deleted successfully" });
+  } catch (error) {
+    return res.status(500).send({
+      message: "Error deleting media data",
+      error: error.message,
+    });
+  }
+};
 
+// Function to update media data by ID
+const updateMediaById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedEntry = await AllData.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    if (!updatedEntry) {
+      return res.status(404).json({ message: "Media data not found" });
+    }
+    return res.status(200).json({
+      message: "Media data updated successfully",
+      data: updatedEntry,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      message: "Error updating media data",
+      error: error.message,
+    });
+  }
+};
 
-
-module.exports = {addAllMediaData,getAllMediaData}
+module.exports = { addAllMediaData, getAllMediaData, deleteMediaById, updateMediaById };
