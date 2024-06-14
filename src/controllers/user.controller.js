@@ -69,6 +69,7 @@ const Login = async (req, res) => {
       name: user.name,
       email: user.email,
     });
+    console.log(token);
 
     // Update the token field in the user document
     user.token = token;
