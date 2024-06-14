@@ -64,7 +64,11 @@ const Login = async (req, res) => {
     }
 
     // Create a JWT token for the user
-    const token = createToken({ id: user._id });
+    const token = createToken({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+    });
 
     // Update the token field in the user document
     user.token = token;
